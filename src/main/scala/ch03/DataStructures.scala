@@ -74,6 +74,42 @@ object List {
   def product2(l: List[Double]) =
     foldRight(l, 1.0)(_ * _)
 
+  def length[A](l: List[A]): Int =
+    foldRight(l, 0)((_: A, len: Int) => len + 1)
+
+  def foldLeft[A, B](l: List[A], z: B)(f: (B, A) => B): B = {
+    def go(l: List[A], acc: B): B = l match {
+      case Nil => acc
+      case Cons(x, xs) => go(xs, f(acc, x))
+    }
+    go(l, z)
+  }
+
+  def sum3(l: List[Int]) =
+    foldLeft(l, 0)(_ + _)
+
+  def product3(l: List[Double]) =
+    foldLeft(l, 1.0)(_ * _)
+
+  def length2[A](l: List[A]): Int =
+    foldLeft(l, 0)((len: Int, _: A) => len + 1)
+
+  def reverse[A](l: List[A]): List[A] =
+    foldLeft(l, Nil: List[A])((a, b) => Cons(b, a))
+
+  def append2[A](a1: List[A], a2: List[A]): List[A] =
+    foldRight(a1, a2)(Cons(_, _))
+
+  def flatten[A](ls: List[List[A]]): List[A] = {
+    //def cons(xss: List[A], yss: List[A]) = {
+    //  tail = ys match {
+    //    case Nil => Nil
+    //    case Cons(y, ys) => cons(ys, Nil)
+    //  }
+    //}
+    foldRight(ls, Nil: List[A])((a1: List[A], a2: List[A]) => append(a1, a2))
+  }
+
   val example = Cons(1, Cons(2, Cons(3, Nil)))
   val example2 = List(1, 2, 3)
   val total = sum(example)
