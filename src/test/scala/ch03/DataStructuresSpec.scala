@@ -110,7 +110,7 @@ class DataStructuresSpec extends FlatSpec with Matchers {
     List.reverse(List(1, 2, 3)) should be (List(3, 2, 1))
   }
 
-  "flatten" should "return the concatenated list" in {
+  "#15 flatten" should "return the concatenated list" in {
     List.flatten(List(List(1), List(2), List(3))) should be (List(1, 2, 3))
     List.flatten(List(List(1, 2), List(3, 4), List(5, 6))) should be (List(1, 2, 3, 4, 5, 6))
   }
