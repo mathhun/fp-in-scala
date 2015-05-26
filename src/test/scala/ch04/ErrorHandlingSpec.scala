@@ -18,6 +18,14 @@ class ErrorHandlingSpec extends FlatSpec with Matchers {
   }
 
   "mean" should "return Some value when valid" in {
+    Option.mean(List(1, 2, 3)) should be (Option.Some(2))
+  }
+
+  it should "return None value when invalid" in {
     Option.mean(List()) should be (Option.None)
+  }
+
+  "map" should "" in {
+    (Some(2.0).map(_ * 3.0)) should be (Some(6.0))
   }
 }
