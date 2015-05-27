@@ -25,7 +25,23 @@ class ErrorHandlingSpec extends FlatSpec with Matchers {
     Option.mean(List()) should be (Option.None)
   }
 
-  "map" should "" in {
+  "map" should "apply a function to Some(x) value" in {
     (Some(2.0).map(_ * 3.0)) should be (Some(6.0))
+  }
+
+  "pattern" should "return None when PatternSyntaxException" in {
+    pattern("regexp(") should be (None)
+  }
+
+  "doesMatch" should "return Some(true) when matched" in {
+    doesMatch("regexp?", "regex") should be (Some(true))
+    doesMatch("regexp?", "regexp") should be (Some(true))
+    doesMatch("regexp?", "doesntmatch") should be (Some(false))
+  }
+
+  "bothMatch" should "return Some(true) when matched" in {
+    bothMatch("aa*bb*", "a+b+", "aaabbb") should be (Some(true))
+    bothMatch("cccc", "a+b+", "aaabbb") should be (Some(false))
+    bothMatch("aa*bb*", "cccc", "aaabbb") should be (Some(false))
   }
 }
