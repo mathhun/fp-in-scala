@@ -70,5 +70,22 @@ object ErrorHandling {
   def bothMatch_1(pat: String, pat2: String, s: String): Option[Boolean] =
     mkMatcher(pat) flatMap (f =>
     mkMatcher(pat2) map (g =>
-    f(s) && g(s)))
+      f(s) && g(s)))
+
+  sealed trait Either[+E, +A]
+  case class Left[+E](value: E) extends Either[E, Nothing]
+  case class Right[+A](value: A) extends Either[Nothing, A]
+
+  def mean_either(xs: IndexedSeq[Double]): Either[String, Double] =
+    if (xs.isEmpty)
+      Left("mean of empty List!")
+    else
+      Right(xs.sum / xs.length)
+
+  def safeDiv(x: Double, y: Double): Either[Exception, Double] =
+    try {
+      Right(x / y)
+    } catch {
+      case e: Exception => Left(e)
+    }
 }
