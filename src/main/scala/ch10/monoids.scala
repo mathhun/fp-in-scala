@@ -77,4 +77,12 @@ object Monoids {
 
   def countWords(s: String): Int =
     0
+
+  // F[_] == higher-order type constructor
+  def Foldale[F[_]] {
+    //def foldRight[A, B](as: F[A])(f: (A, B) => B): B
+    //def foldLeft[A, B](as: F[A])(f: (B, A) => B): B
+    //def foldMap[A, B](as: F[A])(f: A => B)(mb: Monoid[B]): B
+    //def concatenate[A](as: F[A])(m: Monoid[A]): A
+  }
 }

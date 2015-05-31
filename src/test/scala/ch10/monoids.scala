@@ -56,9 +56,23 @@ class MonoidsSpec extends FlatSpec with Matchers {
   }
 
   "#9" should "implement wcMonoid" in {
+    // TODO:
   }
 
   "#10" should "implement wordcount using WC" in {
-    countWords("lorem ipsum dolor sit amet, ") should be (5)
+    // TODO:
+    //countWords("lorem ipsum dolor sit amet, ") should be (5)
+  }
+
+  "#11" should "implement an efficient foldMap for IndexedSeq" ignore {
+    // TODO:
+  }
+
+  "#12" should "Use foldMap to detect whether a given IndexedSeq[Int] is ordered" ignore {
+    // TODO:
+  }
+
+  "#13" should "Implement Foldable[List/IndexedSeq/Stream]" in {
+
   }
 }
