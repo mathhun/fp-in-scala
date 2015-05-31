@@ -49,4 +49,32 @@ object Monoids {
       (x: A) => a1(a2(x))
     def zero = (x: A) => x
   }
+
+  def wordsMonoid = new Monoid[String] {
+    def op(a1: String, a2: String): String =
+      a1.trim + " " + a2.trim
+    def zero = ""
+  }
+
+  def concatenate[A](as: List[A], m: Monoid[A]): A =
+    as.foldLeft(m.zero)(m.op)
+
+  def foldMap[A, B](as: List[A], m: Monoid[B])(f: A => B): B =
+    concatenate(as.map(f), m)
+
+  //def foldRight2[A, B](zero: B)(f: A => A => B): B =
+  //  zero
+
+  sealed trait WC
+  case class Stub(chars: String) extends WC
+  case class Part(lStub: String, words: Int, rStub: String) extends WC
+
+  def wcMonoid = new Monoid[WC] {
+    def op(a1: WC, a2: WC): WC =
+      zero
+    def zero = Part("", 0, "")
+  }
+
+  def countWords(s: String): Int =
+    0
 }

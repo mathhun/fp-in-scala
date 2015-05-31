@@ -35,4 +35,30 @@ class MonoidsSpec extends FlatSpec with Matchers {
     List("Hic", "Est", "Index").foldRight(stringMonoid.zero)(stringMonoid.op) should be ("HicEstIndex")
     List("Hic", "Est", "Index").foldLeft(stringMonoid.zero)(stringMonoid.op) should be ("HicEstIndex")
   }
+
+  "#5 wordsMonoid" should "be a monoid instance that inserts spaces" in {
+    List("Hic", "est ", "chorda ").foldRight(wordsMonoid.zero)(wordsMonoid.op) should be ("Hic est chorda")
+  }
+
+  "#6 concatenate" should "fold a list with a monoid" in {
+    concatenate(List(1, 2, 3, 4), intAddition) should be (10)
+    concatenate(List(1, 2, 3, 4), intMultiplication) should be (24)
+  }
+
+  "#7 foldMap" should "turn list elements into Monoid instances" in {
+    foldMap(List("a", "bc", "def", "ghij"), intAddition)(_.length) should be (10)
+    foldMap(List("a", "bc", "def", "ghij"), intMultiplication)(_.length) should be (24)
+  }
+
+  "#8" should "implement foldLeft/Right using foldMap" ignore {
+    //List(0, 1, 2, 3, 4).foldRight2(intAddition.zero)(intAddition.op) should be (10)
+    //List(1, 2, 3, 4, 5).foldRight2(intMultiplication.zero)(intMultiplication.op) should be (120)
+  }
+
+  "#9" should "implement wcMonoid" in {
+  }
+
+  "#10" should "implement wordcount using WC" in {
+    countWords("lorem ipsum dolor sit amet, ") should be (5)
+  }
 }
