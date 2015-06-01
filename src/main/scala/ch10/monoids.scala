@@ -79,10 +79,31 @@ object Monoids {
     0
 
   // F[_] == higher-order type constructor
-  def Foldale[F[_]] {
+  trait Foldale[F[_]] {
     //def foldRight[A, B](as: F[A])(f: (A, B) => B): B
     //def foldLeft[A, B](as: F[A])(f: (B, A) => B): B
     //def foldMap[A, B](as: F[A])(f: A => B)(mb: Monoid[B]): B
-    //def concatenate[A](as: F[A])(m: Monoid[A]): A
+    //def concatenate[A](as: F[A])(m: Monoid[A]): A =
+    //  as.foldLeft(m.zero)(m.op)
   }
+
+  trait Foldable[List] {
+    //def foldRight[A, B](as: F[List])(f: (A, B) => B): B =
+  }
+
+  sealed trait Tree[+A]
+  case class Leaf[A](value: A) extends Tree[A]
+  case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+
+  // #16
+  //def toList[A](fa: F[A]): List[A]
+
+  def mapMergeMonoid[K, V](V: Monoid[V]): Monoid[Map[K, V]] =
+    new Monoid[Map[K, V]] {
+      def zero = Map()
+      def op(a: Map[K, V], b: Map[K, V]) =
+        a.map {
+          case (k, v) => (k, V.op(v, b.get(k) getOrElse V.zero))
+        }
+    }
 }

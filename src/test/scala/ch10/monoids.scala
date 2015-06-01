@@ -68,11 +68,33 @@ class MonoidsSpec extends FlatSpec with Matchers {
     // TODO:
   }
 
-  "#12" should "Use foldMap to detect whether a given IndexedSeq[Int] is ordered" ignore {
+  "#12" should "use foldmap to detect whether a given IndexedSeq[Int] is ordered" ignore {
     // TODO:
   }
 
-  "#13" should "Implement Foldable[List/IndexedSeq/Stream]" in {
+  "#13" should "implement Foldable[List/IndexedSeq/Stream]" in {
+    // TODO:
+  }
 
+  "#14" should "implement Foldable[Tree]" in {
+    // TODO:
+  }
+
+  "#15" should "implement Foldable[Option]" in {
+    // TODO:
+  }
+
+  "#16" should "implement toList" in {
+    // TODO:
+  }
+
+  "mapMergeMonoid" should "be able to nested Monoids" in {
+    val M: Monoid[Map[ String, Map[String, Int]]] =
+      mapMergeMonoid(mapMergeMonoid(intAddition))
+
+    val m1 = Map("o1" -> Map("i1" -> 1, "i2" -> 2))
+    val m2 = Map("o1" -> Map("i2" -> 3))
+
+    M.op(m1, m2) should be (Map("o1" -> Map("i1" -> 1, "i2" -> 5)))
   }
 }
