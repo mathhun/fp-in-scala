@@ -3,14 +3,25 @@ package fpinscala.monad
 object Monad {
   trait Functor[F[_]] {
     def map[A, B](fa: F[A])(f: A => B): F[B]
+
+    def distribute[A, B](fab: F[(A, B)]): (F[A], F[B]) =
+      (map(fab)(_._1), map(fab)(_._2))
+
+    trait listFunctor extends Functor[List] {
+      def map[A, B](as: List[A])(f: A => B): List[B] = as map f
+    }
   }
 
-  def distribute[A, B](fab: F[A, B]): (F[A], F[B]) =
-    (map(fab)(_._1), map(fab)(_._2))
+  trait Monad[M[_]] extends Functor[M] {
+    def unit[A](a: => A): M[A]
+    def flatMap[A, B](ma: M[A])(f: A => M[B]): M[B]
 
-  trait listFunctor extends Functor[List] {
-    def map[A, B](as: List[A])(f: A => B): List[B] = as map f
+    def map[A, B](ma: M[A])(f: A => B): M[B] =
+      flatMap(ma)(a => unit(f(a)))
+    def map2[A, B, C](ma: M[A], mb: M[B])(f: (A, B) => C): M[C] =
+      flatMap(ma)(a => map(mb)(b => f(a, b)))
+
+    def sequence[A](lma: List[M[A]]): M[List[A]]
+    def traverse[A, B](la: List[A])(f: A => M[B]): M[List[B]]
   }
-
-
 }
