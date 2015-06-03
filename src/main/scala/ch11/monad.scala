@@ -23,5 +23,19 @@ object Monad {
 
     def sequence[A](lma: List[M[A]]): M[List[A]]
     def traverse[A, B](la: List[A])(f: A => M[B]): M[List[B]]
+
+    def replicateM[A](n: Int, ma: M[A]): M[List[A]]
+
+    def compose[A, B, C](f: A => M[B], g: B => M[C]): A => M[C] =
+      (a: A) => flatMap(f(a))(g)
   }
+
+  case class Order(item: Item, quantity: Int)
+  case class Item(name: String, price: Double)
+
+  //val genOrder: Gen[Order] = for {
+  //  name <- Gen.nextString
+  //  price <- Gen.nextDouble
+  //  quantity <- Gen.nextInt
+  //} yield Order(Item(name, price), quantity)
 }
