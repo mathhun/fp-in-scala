@@ -105,19 +105,6 @@ object MyModule {
     println("is sorted: %s".format(isSorted(doubles, (a: Double, b: Double) => a > b)))
     println("is sorted: %s".format(isSorted(Array(1, 5, 4, 0, 2, 3), (a: Int, b: Int) => a > b)))
 
-    // partial1
-    def add(a: Int, b: Int): Int = a + b
-    val add10 = partial1(10, add)
-    println("partial1: %s".format(add10(2)))
-
-    // curry
-    val cadd = curry(add)
-    println("curried add: %d".format(cadd(1)(2)))
-
-    // uncurry
-    val uadd = uncurry(cadd)
-    println("uncurried add: %d".format(uadd(2, 3)))
-
     // compose
     def pow2(a: Double): Double = math.pow(a, 2)
     def div2(a: Double): Double = a / 2

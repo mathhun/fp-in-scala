@@ -21,10 +21,26 @@ class MyModuleSpec extends FlatSpec with Matchers {
     isSorted(Array(1,2,0,3,4), (x: Int, y: Int) => x > y) should be (false)
   }
 
+  def add(a: Int, b: Int): Int = a + b
+  val add10 = partial1(10, add)
+  val cadd = curry(add)
+  val uadd = uncurry(cadd)
+  
   "#3 partial1" should "be a higher-order function doing partial application" in {
     val f = partial1(13, (x: Int, y: Int) => x + y)
     f(0) should be (13)
     f(1) should be (14)
     f(2) should be (15)
+
+    add10(0) should be (10)
+    add10(2) should be (12)
+  }
+
+  "#4 curry" should "converts a function of N arguments into a function of one argument" in {
+    cadd(1)(2) should be (3)
+  }
+
+  "#5 uncurry" should "" in {
+    uadd(2, 3) should be (5)
   }
 }
