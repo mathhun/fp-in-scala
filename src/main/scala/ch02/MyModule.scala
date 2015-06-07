@@ -104,10 +104,5 @@ object MyModule {
     println("is sorted: %s".format(isSorted(ints, (a: Int, b: Int) => a > b)))
     println("is sorted: %s".format(isSorted(doubles, (a: Double, b: Double) => a > b)))
     println("is sorted: %s".format(isSorted(Array(1, 5, 4, 0, 2, 3), (a: Int, b: Int) => a > b)))
-
-    // compose
-    def pow2(a: Double): Double = math.pow(a, 2)
-    def div2(a: Double): Double = a / 2
-    println("compose: %f".format(compose(div2, pow2)(5)))
   }
 }

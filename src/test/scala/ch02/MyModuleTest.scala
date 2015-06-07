@@ -43,4 +43,10 @@ class MyModuleSpec extends FlatSpec with Matchers {
   "#5 uncurry" should "" in {
     uadd(2, 3) should be (5)
   }
+
+  "#6 compose" should "be a higher-order function which composes two functions" in {
+    def pow2(a: Double): Double = math.pow(a, 2)
+    def div2(a: Double): Double = a / 2
+    compose(div2, pow2)(5) should be (12.5)
+  }
 }
