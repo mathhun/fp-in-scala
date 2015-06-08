@@ -59,4 +59,11 @@ class ErrorHandlingSpec extends FlatSpec with Matchers {
   it should "Left?" in {
     safeDiv(5.0, 0.0) should be (Right(1.0/0.0))
   }
+
+  "#1" should "implement Option.map" in {
+    Option.Some(7).map(_ + 13) should be (Option.Some(20))
+  }
+
+  it should "implement Option.flatMap" in {
+  }
 }
