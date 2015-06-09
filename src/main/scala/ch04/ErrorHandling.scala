@@ -6,15 +6,29 @@ object Option {
       case None => None
       case Some(x) => Some(f(x))
     }
+
+    def flatMap[B](f: A => Option[B]): Option[B] = this match {
+      case None => None
+      case Some(x) => f(x)
+    }
+
+    def getOrElse[B >: A](default: => B): B = this match {
+      case None => default
+      case Some(x) => x
+    }
+
+    def orElse[B >: A](obj: => Option[B]): Option[B] = this match {
+      case None => obj
+      case Some(x) => Some(x)
+    }
+
+    def filter(f: A => Boolean): Option[A] = this match {
+      case None => None
+      case Some(x) => if (f(x)) Some(x) else None
+    }
   }
   case class Some[+A](get: A) extends Option[A]
   case object None extends Option[Nothing]
-
-
-  //def flatMap[B](f: A => Option[B]): Option[B]
-  //def getOrElse[B >: A](default: => B): B
-  //def orElse[B >: A](obj: => Option[B]): Option[B]
-  //def filter(f: A => Boolean): Option[A]
 
   def mean(xs: Seq[Double]): Option[Double] =
     if (xs.isEmpty) None

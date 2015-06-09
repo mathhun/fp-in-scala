@@ -61,9 +61,30 @@ class ErrorHandlingSpec extends FlatSpec with Matchers {
   }
 
   "#1" should "implement Option.map" in {
-    Option.Some(7).map(_ + 13) should be (Option.Some(20))
+    val f = (x: Int) => x + 13
+    Option.Some(7).map(f) should be (Option.Some(20))
+    Option.None.map(f) should be (Option.None)
   }
 
   it should "implement Option.flatMap" in {
+    val f = (x: Int) => Option.Some(x + 13)
+    Option.Some(7).flatMap(f) should be (Option.Some(20))
+    Option.None.flatMap(f) should be (Option.None)
+  }
+
+  it should "implement Option.getOrElse" in {
+    Option.Some(7).getOrElse(-1) should be (7)
+    Option.None.getOrElse(-1) should be (-1)
+  }
+
+  it should "implement Option.orElse" in {
+    Option.Some(7).orElse(Option.Some(13)) should be (Option.Some(7))
+    Option.None.orElse(Option.Some(13)) should be (Option.Some(13))
+  }
+
+  it should "implement Option.filter" in {
+    val f = (x: Int) => x >= 10
+    Option.Some(7).filter(f) should be (Option.None)
+    Option.Some(13).filter(f) should be (Option.Some(13))
   }
 }
