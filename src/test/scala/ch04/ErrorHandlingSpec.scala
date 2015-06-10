@@ -87,4 +87,9 @@ class ErrorHandlingSpec extends FlatSpec with Matchers {
     Option.Some(7).filter(f) should be (Option.None)
     Option.Some(13).filter(f) should be (Option.Some(13))
   }
+
+  "#2 variance" should "compute variance of Seq[Double]" in {
+    variance(Seq(2, 3, 5, 7, 11)) should be (Option.Some(10.24))
+    variance(Seq()) should be (Option.None)
+  }
 }

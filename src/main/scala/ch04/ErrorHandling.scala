@@ -2,10 +2,8 @@ package fpinscala.errorhandling
 
 object Option {
   sealed trait Option[+A] {
-    def map[B](f: A => B): Option[B] = this match {
-      case None => None
-      case Some(x) => Some(f(x))
-    }
+    def map[B](f: A => B): Option[B] =
+      flatMap(x => Some(f(x)))
 
     def flatMap[B](f: A => Option[B]): Option[B] = this match {
       case None => None
@@ -44,6 +42,14 @@ object ErrorHandling {
   def mean_1(xs: IndexedSeq[Double], onEmpty: Double): Double =
     if (xs.isEmpty) onEmpty
     else xs.sum / xs.length
+
+  def variance(xs: Seq[Double]): Option.Option[Double] = {
+    if (xs.isEmpty) return Option.None
+
+    val m = mean(xs)
+    val ys = xs.map(x => math.pow(x - m, 2))
+    return Option.Some(ys.sum / ys.length)
+  }
 
   case class Employee(name: String, department: String)
 
