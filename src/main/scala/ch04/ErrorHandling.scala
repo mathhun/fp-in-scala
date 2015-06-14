@@ -93,6 +93,20 @@ object ErrorHandling {
     mkMatcher(pat2) map (g =>
       f(s) && g(s)))
 
+  def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = {
+    for {
+      aa <-a
+      bb <- b
+    } yield f(aa, bb)
+  }
+
+  def bothMatch_2(pat1: String, pat2: String, s: String): Option[Boolean] = {
+    map2(mkMatcher(pat1), mkMatcher(pat2))((matcher1, matcher2) => matcher1(s) && matcher2(s))
+  }
+
+  //def sequence[A](a: List[Option[A]]): Option[List[A]] = {
+  //}
+
   sealed trait Either[+E, +A]
   case class Left[+E](value: E) extends Either[E, Nothing]
   case class Right[+A](value: A) extends Either[Nothing, A]

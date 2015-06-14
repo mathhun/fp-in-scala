@@ -33,6 +33,16 @@ class ErrorHandlingSpec extends FlatSpec with Matchers {
     pattern("regexp(") should be (None)
   }
 
+  "mkMatcher" should "return a matcher if regexp is valid, None otherwise" in {
+    for {
+      p <- mkMatcher("^abc")
+    } yield p("abc") should be (true)
+
+    for {
+      p <- mkMatcher("invalid(")
+    } yield p("abc") should be (false)
+  }
+
   "doesMatch" should "return Some(true) when matched" in {
     doesMatch("regexp?", "regex") should be (Some(true))
     doesMatch("regexp?", "regexp") should be (Some(true))
@@ -91,5 +101,31 @@ class ErrorHandlingSpec extends FlatSpec with Matchers {
   "#2 variance" should "compute variance of Seq[Double]" in {
     variance(Seq(2, 3, 5, 7, 11)) should be (Option.Some(10.24))
     variance(Seq()) should be (Option.None)
+  }
+
+  "#3 map2" should "be a map for functions which take two arguments" in {
+    val add = (x: Int, y: Int) => (x + y)
+    map2(Some(3), Some(5))(add) should be (Some(8))
+    map2(Some(3), None)(add) should be (None)
+    map2(None, Some(5))(add) should be (None)
+  }
+
+  "#4" should "implement bothMatch using map2" in {
+    bothMatch_2("aa*bb*", "a+b+", "aaabbb") should be (Some(true))
+    bothMatch_2("cccc", "a+b+", "aaabbb") should be (Some(false))
+    bothMatch_2("aa*bb*", "cccc", "aaabbb") should be (Some(false))
+    bothMatch_2("^abc.*", ".*def$", "abcdef") should be (Some(true))
+  }
+  it should "return false when match fails" in {
+    bothMatch_2("^abc.*", "xxx", "abcdef") should be (Some(false))
+    bothMatch_2("xxx", ".*def$", "abcdef") should be (Some(false))
+  }
+  it should "return None when regexp is invalid" in {
+    bothMatch_2("invalid(", "xxx", "abc") should be (None)
+    bothMatch_2("xxx", "invalid(", "abc") should be (None)
+  }
+
+  "#5 sequence" should "combine List[Option[A]] into Option[List[A]]" in {
+    //List(Option(3), Option(5), Option(7)) should be (Option(List(3, 5, 7)))
   }
 }
