@@ -136,4 +136,15 @@ class ErrorHandlingSpec extends FlatSpec with Matchers {
     sequence2(List(Some(3), Some(5), Some(7))) should be (Some(List(3, 5, 7)))
     sequence2(List(Some(3), None, Some(7))) should be (None)
   }
+
+  "#7" should "Either.map" in {
+    Right(8.0) map (_ / 2.0) should be (Right(4.0))
+    Left("error") map ((x: Double) => x / 2.0) should be (Left("error"))
+  }
+
+  it should "Either.flatMap" in {
+    Right(IndexedSeq(1.0, 2.0, 3.0, 5.0, 8.0)) flatMap mean_either should be (Right(3.8))
+    Right(IndexedSeq()) flatMap mean_either should be (Left("mean of empty List!"))
+    Left("empty") flatMap mean_either should be (Left("empty"))
+  }
 }
