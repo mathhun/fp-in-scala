@@ -126,6 +126,14 @@ class ErrorHandlingSpec extends FlatSpec with Matchers {
   }
 
   "#5 sequence" should "combine List[Option[A]] into Option[List[A]]" in {
-    //List(Option(3), Option(5), Option(7)) should be (Option(List(3, 5, 7)))
+    sequence(List(Some(3), Some(5), Some(7))) should be (Some(List(3, 5, 7)))
+  }
+  it should "return None if the list contains None" in {
+    sequence(List(Some(3), None, Some(7))) should be (None)
+  }
+
+  "#6 traverse" should "be similar as sequence.map, but traverse the list only once" in {
+    sequence2(List(Some(3), Some(5), Some(7))) should be (Some(List(3, 5, 7)))
+    sequence2(List(Some(3), None, Some(7))) should be (None)
   }
 }

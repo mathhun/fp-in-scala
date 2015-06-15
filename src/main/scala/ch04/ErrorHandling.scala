@@ -95,7 +95,7 @@ object ErrorHandling {
 
   def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = {
     for {
-      aa <-a
+      aa <- a
       bb <- b
     } yield f(aa, bb)
   }
@@ -104,8 +104,31 @@ object ErrorHandling {
     map2(mkMatcher(pat1), mkMatcher(pat2))((matcher1, matcher2) => matcher1(s) && matcher2(s))
   }
 
-  //def sequence[A](a: List[Option[A]]): Option[List[A]] = {
-  //}
+  def sequence[A](as: List[Option[A]]): Option[List[A]] = {
+    def go(xxs: List[Option[A]], acc: List[A]): Option[List[A]] = xxs match {
+      case Some(x) :: xs => go(xs, x :: acc)
+      case None :: _ => None
+      case Nil => Some(acc.reverse)
+    }
+    go(as, Nil)
+  }
+
+  def sequence2[A](as: List[Option[A]]): Option[List[A]] =
+    traverse(as)(x => x)
+
+  def parsePatterns(a: List[String]): Option[List[Pattern]] =
+    sequence(a map pattern)
+
+  def traverse[A, B](as: List[A])(f: A => Option[B]): Option[List[B]] = {
+    def go(xs: List[A], acc: List[B]): Option[List[B]] = {
+      if (xs.isEmpty) Some(acc.reverse)
+      else f(xs.head) match {
+        case Some(x) => go(xs.tail, x :: acc)
+        case None => None
+      }
+    }
+    go(as, Nil)
+  }
 
   sealed trait Either[+E, +A]
   case class Left[+E](value: E) extends Either[E, Nothing]
