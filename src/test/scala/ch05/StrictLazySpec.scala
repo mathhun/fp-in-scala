@@ -36,6 +36,19 @@ class StrictLazySpec extends FlatSpec with Matchers {
 
     (pair2 { println("hi"); 1 + 41 }) should be (42, 42)
     (stream.toString) should be ("hi\n")
+  }
 
+  "#1 toList" should "convert a stream to a list" in {
+    Stream(1, 2, 3, 4).toList should be (List(1, 2, 3, 4))
+    Stream().toList should be (List())
+  }
+
+  "#2 take" should "return first N element in stream" in {
+    Stream(1,2,3,4,5).take(2).toList should be (Stream(1,2).toList)
+  }
+
+  "#3 takeWhile" should "return the first elements while they satisfy the predicate" in {
+    Stream(1,2,3,4,5,6).takeWhile(_ <= 4).toList should be (List(1,2,3,4))
+    Stream(10, 11, 12).takeWhile(_ <= 5).toList should be (Nil)
   }
 }
