@@ -39,6 +39,18 @@ object StrictLazy {
       go(this)
     }
 
+    def foldRight[B](z: => B)(f: (A, => B) => B): B =
+      uncons match {
+        case Some((h, t)) => f(h, t.foldRight(z)(f))
+        case None => z
+      }
+
+    def exists(p: A => Boolean): Boolean =
+      foldRight(false)((a, b) => p(a) || b)
+
+    //def takeWhile2(p: A => Boolean): Stream[A] = {
+    //}
+
     override def toString(): String =
       toList.toString
   }

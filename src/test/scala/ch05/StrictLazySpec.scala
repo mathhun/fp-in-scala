@@ -51,4 +51,30 @@ class StrictLazySpec extends FlatSpec with Matchers {
     Stream(1,2,3,4,5,6).takeWhile(_ <= 4).toList should be (List(1,2,3,4))
     Stream(10, 11, 12).takeWhile(_ <= 5).toList should be (Nil)
   }
+
+  "foldRight" should "be stream version of foldRight" in {
+    Stream(1,2,3,4,5).foldRight(0)(_ + _) should be (15)
+  }
+
+  "exists" should "be true if any one of elements in stream satisfy the predicate" in {
+    Stream(2,3,5,7,11).exists(_ % 2 == 0) should be (true)
+    Stream(3,5,7,11).exists(_ % 2 == 0) should be (false)
+  }
+
+  it should "evaluate lazily" in {
+    def pred(x: Int): Boolean = {
+      println(x)
+      x % 2 == 0
+    }
+
+    val out = new java.io.ByteArrayOutputStream()
+    Console.withOut(out) {
+      Stream(1,1,2,3,5,8).exists(pred) should be (true)
+    }
+    out.toString should be ("1\n1\n2\n")
+  }
+
+  "#5" should "use foldRight to implement takeWhile" in {
+    // TODO:
+  }
 }
