@@ -83,4 +83,22 @@ class StrictLazySpec extends FlatSpec with Matchers {
     Stream(1,2,3,4,5,6).takeWhile2(_ <= 4).toList should be (List(1,2,3,4))
     Stream(10, 11, 12).takeWhile2(_ <= 5).toList should be (Nil)
   }
+
+  "ones" should "have 1s" in {
+    ones.take(5).toList should be (List(1,1,1,1,1))
+  }
+
+  "#7 constant" should "be a stream of constants" in {
+    constant(5).take(5).toList should be (List(5,5,5,5,5))
+    constant(10).take(5).toList should be (List(10,10,10,10,10))
+  }
+
+  "#8 from" should "be an infinite stream of integers starting from n" in {
+    from(1).take(5).toList should be (List(1,2,3,4,5))
+    from(5).take(5).toList should be (List(5,6,7,8,9))
+  }
+
+  "fibs" should "be fibonacci number stream" in {
+    //fibs.take(10).toList should be (List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55))
+  }
 }

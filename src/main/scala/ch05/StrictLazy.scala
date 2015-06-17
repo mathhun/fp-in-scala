@@ -45,6 +45,12 @@ object StrictLazy {
         case None => z
       }
 
+    def foldRight2(z: => Stream[Int])(f: (Int, => Stream[Int]) => Stream[Int]): Stream[Int] =
+      uncons match {
+        case Some((h: Int, t)) => f(h, t.foldRight2(z)(f))
+        case None => z
+      }
+
     def exists(p: A => Boolean): Boolean =
       foldRight(false)((a, b) => p(a) || b)
 
@@ -53,9 +59,9 @@ object StrictLazy {
       case Some((h, t)) => if (p(h)) t.forAll(p) else false
     }
 
-    def takeWhile2(p: A => Boolean): Stream[A] = {
-      this.foldRight(Stream.empty)((h, t) =>
-        if (p(h)) Stream.cons(h, Stream.empty)
+    def takeWhile2(p: Int => Boolean): Stream[Int] = {
+      this.foldRight2(Stream.empty)((h, t) =>
+        if (p(h)) Stream.cons(h, t.takeWhile2(p))
         else Stream.empty
       )
     }
@@ -76,5 +82,16 @@ object StrictLazy {
     def apply[A](as: A*): Stream[A] =
       if (as.isEmpty) empty
       else cons(as.head, apply(as.tail: _*))
+  }
+
+  val ones: Stream[Int] = Stream.cons(1, ones)
+
+  def constant[A](a: A): Stream[A] =
+    Stream.cons(a, constant(a))
+
+  def from(n: Int): Stream[Int] =
+    Stream.cons(n, from(n + 1))
+
+  def fibs(): Stream[Int] = {
   }
 }
