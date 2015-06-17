@@ -48,8 +48,17 @@ object StrictLazy {
     def exists(p: A => Boolean): Boolean =
       foldRight(false)((a, b) => p(a) || b)
 
-    //def takeWhile2(p: A => Boolean): Stream[A] = {
-    //}
+    def forAll(p: A => Boolean): Boolean = uncons match {
+      case None => true
+      case Some((h, t)) => if (p(h)) t.forAll(p) else false
+    }
+
+    def takeWhile2(p: A => Boolean): Stream[A] = {
+      this.foldRight(Stream.empty)((h, t) =>
+        if (p(h)) Stream.cons(h, Stream.empty)
+        else Stream.empty
+      )
+    }
 
     override def toString(): String =
       toList.toString

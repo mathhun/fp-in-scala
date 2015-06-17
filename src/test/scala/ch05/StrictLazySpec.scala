@@ -74,7 +74,13 @@ class StrictLazySpec extends FlatSpec with Matchers {
     out.toString should be ("1\n1\n2\n")
   }
 
+  "#4" should "implement forAll" in {
+    Stream(2,4,6,8,10).forAll(_ % 2 == 0) should be (true)
+    Stream(2,4,6,8,10).forAll(_ % 2 == 1) should be (false)
+  }
+
   "#5" should "use foldRight to implement takeWhile" in {
-    // TODO:
+    Stream(1,2,3,4,5,6).takeWhile2(_ <= 4).toList should be (List(1,2,3,4))
+    Stream(10, 11, 12).takeWhile2(_ <= 5).toList should be (Nil)
   }
 }
