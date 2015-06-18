@@ -1,6 +1,7 @@
 package fpinscala.strictandlazy.spec
 import org.scalatest._
 import fpinscala.strictandlazy.StrictLazy._
+import fpinscala.strictandlazy.StrictLazy.Stream._
 
 class StrictLazySpec extends FlatSpec with Matchers {
   "Filter" should "" in {
@@ -98,7 +99,29 @@ class StrictLazySpec extends FlatSpec with Matchers {
     from(5).take(5).toList should be (List(5,6,7,8,9))
   }
 
-  "fibs" should "be fibonacci number stream" in {
-    //fibs.take(10).toList should be (List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55))
+  "#9 fibs" should "be fibonacci number stream" in {
+    fibs.take(10).toList should be (List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34))
+  }
+
+  "#10 unfold" should "build stream" in {
+    unfold(0)(x => Some(x, x + 1)).take(5).toList should be (List(0, 1, 2, 3, 4))
+  }
+
+  "#11 fibs/unfold" should "reimplement fibs using unfold" in {
+    fibsUnfold.take(10).toList should be (List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34))
+  }
+
+  "#11 from/unfold" should "reimplement from using unfold" in {
+    fromUnfold(0).take(5).toList should be (List(0, 1, 2, 3, 4))
+    fromUnfold(3).take(5).toList should be (List(3, 4, 5, 6, 7))
+  }
+
+  "#11 constant/unfold" should "reimplement constant using unfold" in {
+    constantUnfold(5).take(5).toList should be (List(5,5,5,5,5))
+    constantUnfold(10).take(5).toList should be (List(10,10,10,10,10))
+  }
+
+  "#11 ones/unfold" should "reimplement ones using unfold" in {
+    onesUnfold.take(5).toList should be (List(1,1,1,1,1))
   }
 }

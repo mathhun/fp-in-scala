@@ -82,16 +82,35 @@ object StrictLazy {
     def apply[A](as: A*): Stream[A] =
       if (as.isEmpty) empty
       else cons(as.head, apply(as.tail: _*))
+
+    def constant[A](a: A): Stream[A] =
+      cons(a, constant(a))
+
+    def from(n: Int): Stream[Int] =
+      cons(n, from(n + 1))
+
+    def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = f(z) match {
+      case Some((a, s)) => cons(a, unfold(s)(f))
+      case None => empty
+    }
   }
 
   val ones: Stream[Int] = Stream.cons(1, ones)
 
-  def constant[A](a: A): Stream[A] =
-    Stream.cons(a, constant(a))
-
-  def from(n: Int): Stream[Int] =
-    Stream.cons(n, from(n + 1))
-
   def fibs(): Stream[Int] = {
+    def f(n0: Int, n1: Int): Stream[Int] = Stream.cons(n0, f(n1, n0 + n1))
+    f(0, 1)
   }
+
+  def fibsUnfold(): Stream[Int] = {
+    Stream.unfold(0, 1)(s => Some(s._1, (s._2, s._1 + s._2)))
+  }
+
+  def fromUnfold(n: Int): Stream[Int] =
+    Stream.unfold(n)(m => Some(m, m + 1))
+
+  def constantUnfold(n: Int): Stream[Int] =
+    Stream.unfold(n)(m => Some(m, m))
+
+  val onesUnfold: Stream[Int] = Stream.unfold(1)(_ => Some(1, 1))
 }
