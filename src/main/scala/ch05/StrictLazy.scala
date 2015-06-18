@@ -29,6 +29,15 @@ object StrictLazy {
       go(n, this)
     }
 
+    def takeUnfold(n: Int): Stream[A] = {
+      Stream.unfold((n, this))(s => s._2.uncons match {
+        case None => None
+        case Some((h, t)) =>
+          if (s._1 <= 0) None
+          else Some(h, (s._1 - 1, t))
+      })
+    }
+
     def takeWhile(p: A => Boolean): Stream[A] = {
       def go(as: Stream[A]): Stream[A] = as.uncons match {
         case None => Stream.empty
@@ -37,6 +46,13 @@ object StrictLazy {
           else Stream.empty
       }
       go(this)
+    }
+
+    def takeWhileUnfold(p: A => Boolean): Stream[A] = {
+      Stream.unfold(this)(s => s.uncons match {
+        case None => None
+        case Some((h, t)) => if (p(h)) Some(h, t) else None
+      })
     }
 
     def foldRight[B](z: => B)(f: (A, => B) => B): B =
@@ -48,6 +64,7 @@ object StrictLazy {
     def foldRight2(z: => Stream[Int])(f: (Int, => Stream[Int]) => Stream[Int]): Stream[Int] =
       uncons match {
         case Some((h: Int, t)) => f(h, t.foldRight2(z)(f))
+        case Some(x) => f(0, x._2.foldRight2(z)(f))
         case None => z
       }
 
@@ -64,6 +81,39 @@ object StrictLazy {
         if (p(h)) Stream.cons(h, t.takeWhile2(p))
         else Stream.empty
       )
+    }
+
+    def map[B](f: A => B): Stream[B] = uncons match {
+      case None => Stream.empty
+      case Some((h, t)) => Stream.cons(f(h), t.map(f))
+    }
+
+    def mapUnfold[B](f: A => B): Stream[B] =
+      Stream.unfold(this)(s => s.uncons match {
+        case Some((h, t)) => Some((f(h), t))
+        case None => None
+      })
+
+    def zipUnfold[B](bs: Stream[B]): Stream[(A, B)] = {
+      def g(as: Stream[A], bs: Stream[B]): Option[((A, B), (Stream[A], Stream[B]))] = {
+        (as.uncons, bs.uncons) match {
+          case (None, _) => None
+          case (_, None) => None
+          case (Some((h1, t1)), Some((h2, t2))) => Some(((h1, h2), (t1, t2)))
+        }
+      }
+      Stream.unfold((this, bs))(s => g(s._1, s._2))
+    }
+
+    def zipWithUnfold[B, C](bs: Stream[B])(f: (A, B) => C): Stream[C] = {
+      def g(as: Stream[A], bs: Stream[B]): Option[(C, (Stream[A], Stream[B]))] = {
+        (as.uncons, bs.uncons) match {
+          case (None, _) => None
+          case (_, None) => None
+          case (Some((h1, t1)), Some((h2, t2))) => Some((f(h1, h2), (t1, t2)))
+        }
+      }
+      Stream.unfold((this, bs))(s => g(s._1, s._2))
     }
 
     override def toString(): String =
@@ -93,6 +143,19 @@ object StrictLazy {
       case Some((a, s)) => cons(a, unfold(s)(f))
       case None => empty
     }
+
+    def fibsUnfold(): Stream[Int] = {
+      unfold(0, 1)(s => Some(s._1, (s._2, s._1 + s._2)))
+    }
+
+    def fromUnfold(n: Int): Stream[Int] =
+      unfold(n)(m => Some(m, m + 1))
+
+    def constantUnfold(n: Int): Stream[Int] =
+      unfold(n)(m => Some(m, m))
+
+    def startsWith[A](s1: Stream[A], s2: Stream[A]): Boolean =
+      s1.zipUnfold(s2).forAll(s => s._1 == s._2)
   }
 
   val ones: Stream[Int] = Stream.cons(1, ones)
@@ -101,16 +164,6 @@ object StrictLazy {
     def f(n0: Int, n1: Int): Stream[Int] = Stream.cons(n0, f(n1, n0 + n1))
     f(0, 1)
   }
-
-  def fibsUnfold(): Stream[Int] = {
-    Stream.unfold(0, 1)(s => Some(s._1, (s._2, s._1 + s._2)))
-  }
-
-  def fromUnfold(n: Int): Stream[Int] =
-    Stream.unfold(n)(m => Some(m, m + 1))
-
-  def constantUnfold(n: Int): Stream[Int] =
-    Stream.unfold(n)(m => Some(m, m))
 
   val onesUnfold: Stream[Int] = Stream.unfold(1)(_ => Some(1, 1))
 }

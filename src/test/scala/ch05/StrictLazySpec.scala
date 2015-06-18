@@ -124,4 +124,49 @@ class StrictLazySpec extends FlatSpec with Matchers {
   "#11 ones/unfold" should "reimplement ones using unfold" in {
     onesUnfold.take(5).toList should be (List(1,1,1,1,1))
   }
+
+  "map" should "be map" in {
+    Stream(1,2,3).map(_ + 1).toList should be (List(2,3,4))
+  }
+  it should "work on infinite lists" in {
+    fibs.map(_ + 3).take(5).toList should be (List(3, 4, 4, 5, 6))
+  }
+
+  "#12 mapUnfold" should "be map" in {
+    Stream(1,2,3).mapUnfold(_ + 1).toList should be (List(2,3,4))
+  }
+  it should "work on infinite lists" in {
+    fibs.mapUnfold(_ + 3).take(5).toList should be (List(3, 4, 4, 5, 6))
+  }
+
+  "#12 takeUnfold" should "return first N element in stream" in {
+    Stream(1,2,3,4,5).takeUnfold(2).toList should be (Stream(1,2).toList)
+  }
+
+  "#12 takeWhileUnfold" should "" in {
+    Stream(1,2,3,4,5,6).takeWhileUnfold(_ <= 4).toList should be (List(1,2,3,4))
+    Stream(10, 11, 12).takeWhileUnfold(_ <= 5).toList should be (Nil)
+  }
+
+  "#12 zipUnfold" should "be zip" in {
+    Stream(1,2,3).zipUnfold(Stream(2,3,4)).toList should be (List((1,2), (2,3), (3,4)))
+    Stream(1,2,3).zipUnfold(Stream(2,3,4,5)).toList should be (List((1,2), (2,3), (3,4)))
+    Stream(1,2,3,4).zipUnfold(Stream(2,3,4)).toList should be (List((1,2), (2,3), (3,4)))
+    Stream(1,2,3,4).zipUnfold(Stream(2,3,4,5)).toList should be (List((1,2), (2,3), (3,4), (4,5)))
+  }
+  it should "be lazy" in {
+    ones.zipUnfold(fibs).take(5).toList should be (List((1,0), (1,1), (1,1), (1,2), (1,3)))
+  }
+
+  "zipWithUnfold" should "be zip" in {
+    Stream(1,2,3).zipWithUnfold(Stream(2,3,4))(_ + _).toList should be (List(3,5,7))
+  }
+
+  "#13 startsWith" should "check prefixes are equal between two streams" in {
+    Stream.startsWith(ones, Stream(1,1,1)) should be (true)
+    Stream.startsWith(ones, Stream(1,1,2)) should be (false)
+
+    Stream.startsWith(Stream(1,1,1), ones) should be (true)
+    Stream.startsWith(Stream(1,1,2), ones) should be (false)
+  }
 }
