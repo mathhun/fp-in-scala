@@ -125,6 +125,16 @@ object StrictLazy {
 
     override def toString(): String =
       "Stream(" + toList.mkString(",") + ")"
+
+    // override def equals(o: Any) = {
+    //   o match {
+    //     case that: Stream[A] => {
+    //       //System.err.println("equals:" + this + " " + o + " " + (this.toList == that.toList))
+    //       this.toList == that.toList
+    //     }
+    //     case _ => false
+    //   }
+    // }
   }
 
   object Stream {
@@ -162,7 +172,12 @@ object StrictLazy {
       unfold(n)(m => Some(m, m))
 
     def startsWith[A](s1: Stream[A], s2: Stream[A]): Boolean =
-      s1.zipUnfold(s2).forAll(s => s._1 == s._2)
+      if (s1.isEmpty || s2.isEmpty) false
+      else s1.zipUnfold(s2).forAll(s => s._1 == s._2)
+
+    def hasSubsequence[A](s1: Stream[A], s2: Stream[A]): Boolean =
+      //System.err.println("startsWith:" + s + " " + s2 + " " + startsWith(s, s2))
+      s1.tails().exists(startsWith(_, s2))
   }
 
   val ones: Stream[Int] = Stream.cons(1, ones)

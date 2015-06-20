@@ -173,5 +173,28 @@ class StrictLazySpec extends FlatSpec with Matchers {
   "#14 tails" should "return tails of stream" in {
     Stream(1,2,3).tails().toString should be
       (Stream(Stream(1,2,3), Stream(2,3), Stream(3), Stream.empty).toString)
+
+    Stream(1,2,3,4).tails().toString should be
+      (Stream(Stream(1,2,3,4), Stream(2,3,4), Stream(3,4), Stream(4), Stream.empty).toString)
+  }
+
+  "hasSubsequence" should "" in {
+    Stream.hasSubsequence(Stream(1), Stream(3)) should be (false)
+    Stream.hasSubsequence(Stream(1,2,3,4,5,6,7), Stream(3,4,5)) should be (true)
+    Stream.hasSubsequence(Stream(1,2,3,4,5,6,7), Stream(9,10)) should be (false)
+  }
+
+  "equals" should "" in {
+    //(Stream(1) == Stream(1)) should be (true)
+    //(Stream(1) == Stream.empty) should be (false)
+    //
+    //(Stream(1,2,3) == Stream(1,2,3)) should be (true)
+    //(Stream(1,2,3) == Stream(1,2,4)) should be (false)
+    //
+    //(Stream(Stream(1), Stream(2)) == Stream(Stream(1), Stream(2))) should be (true)
+    //(Stream(Stream(1), Stream(2)) == Stream(Stream(1), Stream(3))) should be (false)
+    val e = Stream.empty
+    e.isEmpty should be (true)
+    (Stream.empty == Stream.empty) should be (false)
   }
 }
