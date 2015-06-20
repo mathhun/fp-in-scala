@@ -126,15 +126,10 @@ object StrictLazy {
     override def toString(): String =
       "Stream(" + toList.mkString(",") + ")"
 
-    // override def equals(o: Any) = {
-    //   o match {
-    //     case that: Stream[A] => {
-    //       //System.err.println("equals:" + this + " " + o + " " + (this.toList == that.toList))
-    //       this.toList == that.toList
-    //     }
-    //     case _ => false
-    //   }
-    // }
+    override def equals(o: Any) = o match {
+      case that: Stream[A] => this.toList == that.toList
+      case _ => false
+    }
   }
 
   object Stream {

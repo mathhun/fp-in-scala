@@ -185,16 +185,16 @@ class StrictLazySpec extends FlatSpec with Matchers {
   }
 
   "equals" should "" in {
-    //(Stream(1) == Stream(1)) should be (true)
-    //(Stream(1) == Stream.empty) should be (false)
-    //
-    //(Stream(1,2,3) == Stream(1,2,3)) should be (true)
-    //(Stream(1,2,3) == Stream(1,2,4)) should be (false)
-    //
-    //(Stream(Stream(1), Stream(2)) == Stream(Stream(1), Stream(2))) should be (true)
-    //(Stream(Stream(1), Stream(2)) == Stream(Stream(1), Stream(3))) should be (false)
+    (Stream(1) == Stream(1)) should be (true)
+    
+    (Stream(1,2,3) == Stream(1,2,3)) should be (true)
+    (Stream(1,2,3) == Stream(1,2,4)) should be (false)
+    
+    (Stream(Stream(1), Stream(2)) == Stream(Stream(1), Stream(2))) should be (true)
+    (Stream(Stream(1), Stream(2)) == Stream(Stream(1), Stream(3))) should be (false)
+
     val e = Stream.empty
     e.isEmpty should be (true)
-    (Stream.empty == Stream.empty) should be (false)
+    (Stream.empty == Stream.empty) should be (true)
   }
 }
