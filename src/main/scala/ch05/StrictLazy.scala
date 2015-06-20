@@ -116,8 +116,15 @@ object StrictLazy {
       Stream.unfold((this, bs))(s => g(s._1, s._2))
     }
 
+    def tails(): Stream[Stream[A]] = {
+      Stream.unfold((this, false))(s => s._1.uncons match {
+        case Some((h, t)) => Some((s._1, (t, false)))
+        case None => if (s._2) None else Some((s._1, (Stream.empty, true)))
+      })
+    }
+
     override def toString(): String =
-      toList.toString
+      "Stream(" + toList.mkString(",") + ")"
   }
 
   object Stream {

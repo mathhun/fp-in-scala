@@ -169,4 +169,9 @@ class StrictLazySpec extends FlatSpec with Matchers {
     Stream.startsWith(Stream(1,1,1), ones) should be (true)
     Stream.startsWith(Stream(1,1,2), ones) should be (false)
   }
+
+  "#14 tails" should "return tails of stream" in {
+    Stream(1,2,3).tails().toString should be
+      (Stream(Stream(1,2,3), Stream(2,3), Stream(3), Stream.empty).toString)
+  }
 }
