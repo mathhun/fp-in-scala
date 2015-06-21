@@ -14,4 +14,18 @@ object RNG {
       ((seed2 >>> 16).asInstanceOf[Int], simple(seed2))
     }
   }
+
+  def randomPair(rng: RNG): (Int, Int) = {
+    val (i1, _) = rng.nextInt
+    val (i2, _) = rng.nextInt
+    (i1, i2)
+  }
+
+  def positiveInt(rng: RNG): (Int, RNG) = {
+    val (i1, rng1) = rng.nextInt
+    if (i1 == Int.MinValue) (Int.MaxValue, rng1)
+    else (i1.abs, rng1)
+  }
+
+  //def double(rng: RNG): (Double, RNG)
 }
