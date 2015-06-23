@@ -27,5 +27,61 @@ object RNG {
     else (i1.abs, rng1)
   }
 
-  //def double(rng: RNG): (Double, RNG)
+  def positiveInt2: Rand[Int] = {
+    map(int) { i =>
+      if (i != Int.MinValue) i.abs else Int.MaxValue
+    }
+  }
+
+  def positiveInt3: Rand[Int] = {
+    flatMap(int) { i =>
+      rng => {
+        if (i != Int.MinValue) (i.abs, rng) else (Int.MaxValue, rng)
+      }
+    }
+  }
+
+  // def double(rng: RNG): (Double, RNG) = {
+  // }
+
+  type Rand[+A] = RNG => (A, RNG)
+
+  val int: Rand[Int] = _.nextInt
+
+  def unit[A](a: A): Rand[A] =
+    rng => (a, rng)
+
+  def map[A, B](s: Rand[A])(f: A => B): Rand[B] =
+    rng => {
+      val (a, rng2) = s(rng)
+      (f(a), rng2)
+    }
+
+  type State[S, +A] = S => (A, S)
+
+  def map_[S, A, B](a: S => (A, S))(f: A =>B): S => (B, S) = {
+    s => {
+      val (a2, s2) = a(s)
+      (f(a2), s2)
+    }
+  }
+
+  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = {
+    rng => {
+      val (a, rng2) = f(rng)
+      val randb = g(a)
+      randb(rng2)
+    }
+  }
+
+  //def positiveMax(n: Int): Rand[Int]
+}
+
+case class State[S, +A](run: S => (A, S)) {
+  def map[B](f: A =>B): S => (B, S) = {
+    s => {
+      val (a2, s2) = run(s)
+      (f(a2), s2)
+    }
+  }
 }

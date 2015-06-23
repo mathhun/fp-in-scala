@@ -3,10 +3,10 @@ import org.scalatest._
 import fpinscala.pfs._
 
 class PurelyFunctionalStateSpec extends FlatSpec with Matchers {
-  // "java.util.Random" should "" in {
-  //   val rng = new java.util.Random
-  //   rng.nextDouble should be >= 0
-  // }
+  "java.util.Random" should "return a positive Double" in {
+    val rng = new java.util.Random
+    rng.nextDouble should be >= 0.0
+  }
 
   val rng: RNG = RNG.simple(1)
 
@@ -17,5 +17,15 @@ class PurelyFunctionalStateSpec extends FlatSpec with Matchers {
 
   "#1 positiveInt" should "return a positive int" in {
     RNG.positiveInt(rng)._1 should be >= 0
+  }
+
+  "#2 double" should "return a Double [0, 1)" in {
+  }
+
+  "#5 positiveMax" should "" in {
+  }
+
+  "#9" should "reimplement positiveInt using flatMap" in {
+    RNG.positiveInt3(rng)._1 should be >= 0
   }
 }
