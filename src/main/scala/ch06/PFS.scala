@@ -73,8 +73,6 @@ object RNG {
       randb(rng2)
     }
   }
-
-  //def positiveMax(n: Int): Rand[Int]
 }
 
 case class State[S, +A](run: S => (A, S)) {
